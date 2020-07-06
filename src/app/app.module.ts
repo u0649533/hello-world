@@ -34,6 +34,7 @@ import { ArchiveComponent } from './archive/archive.component';
 import { ArchiveFileComponent } from './archive-file/archive-file.component'; 
 import { MyGuardGuard } from './my-guard.guard';
 import { ArchiveFileChildComponent } from './archive-file-child/archive-file-child.component';
+import {ResolverService} from './resolver.service';
 
 @NgModule({
   declarations: [
@@ -61,8 +62,6 @@ import { ArchiveFileChildComponent } from './archive-file-child/archive-file-chi
     ArchiveComponent,
     ArchiveFileComponent,
     ArchiveFileChildComponent
-    
-
   ],
   imports: [
     BrowserModule,
@@ -70,13 +69,13 @@ import { ArchiveFileChildComponent } from './archive-file-child/archive-file-chi
     ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot([
-      {path: '', component:HomeComponent},
+      {path: '', component: HomeComponent},
       {path: 'followers/:id/:username', component: GithubProfileComponent},
       {path: 'followers', component: GithubFollowersComponent},
-      {path: 'posts', component: PostsComponent, 
-      children: [{path:'archiveDetail', component: ArchiveFileChildComponent }]},
+      {path: 'posts', component: PostsComponent, resolve: {archiveList: ResolverService},
+      children: [{path: 'archiveDetail', component: ArchiveFileChildComponent }]},
       {path: 'archive', component: ArchiveComponent, canActivate: [MyGuardGuard],
-      children: [{path:'archiveDetail', component: ArchiveFileChildComponent }]},
+      children: [{path: 'archiveDetail', component: ArchiveFileChildComponent }]},
       {path: 'archiveFile/:month/:year', component: ArchiveFileComponent, canActivate: [MyGuardGuard]},
       {path: '**', component: NotFoundComponent},
 
@@ -88,7 +87,9 @@ import { ArchiveFileChildComponent } from './archive-file-child/archive-file-chi
     AuthorsService,
     GithubFollowersService,
     MyGuardGuard,
-    { provide: ErrorHandler, useClass: AppErrorHandler }
+    ResolverService,
+
+    {provide: ErrorHandler, useClass: AppErrorHandler }
   ],
   bootstrap: [AppComponent]
 })

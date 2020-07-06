@@ -12,11 +12,9 @@ import {Router, ActivatedRoute} from '@angular/router';
 })
 export class PostsComponent implements OnInit {
   posts: any[];
-  
-
-  constructor(private service: PostService, private router:Router, private route: ActivatedRoute) {
+  list: any[];
+  constructor(private service: PostService, private router: Router, private route: ActivatedRoute) {
   }
-
   flag = true;
   show(){
     if(this.flag){
@@ -29,6 +27,9 @@ export class PostsComponent implements OnInit {
   ngOnInit() {
     this.service.getAll()
       .subscribe(posts => this.posts = posts);
+    this.route.data.subscribe((inputData: any) => {
+      this.list =  inputData.data;
+    })
   }
 
   createPost(input: HTMLInputElement) {
